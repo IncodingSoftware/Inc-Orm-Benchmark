@@ -4,6 +4,7 @@ namespace IncOrmBenchmark.Domain
 
     using System.Configuration;
     using System.Data.Entity;
+    using System.Data.Entity.SqlServer;
     using FluentNHibernate.Cfg;
     using FluentNHibernate.Cfg.Db;
     using Incoding.Block.IoC;
@@ -11,6 +12,7 @@ namespace IncOrmBenchmark.Domain
     using Incoding.Data;
     using Incoding.EventBroker;
     using Incoding.MvcContrib;
+    using MongoDB.Bson.Serialization;
     using NHibernate.Context;
     using Raven.Client.Document;
 
@@ -25,6 +27,8 @@ namespace IncOrmBenchmark.Domain
         public const string ravenKey = "ravendb";
 
         public const string entityFramework = "ef";
+
+        public const string mongoDb = "mongoDb";
 
         #endregion
 
@@ -55,15 +59,21 @@ namespace IncOrmBenchmark.Domain
                                                                                                                                                                                         }));
                                                                                                          registry.For<IUnitOfWorkFactory>().Singleton().Use<RavenDbUnitOfWorkFactory>().Named(ravenKey);
                                                                                                          registry.For<IRepository>().Use<RavenDbRepository>().Named(ravenKey);
-
+                                                                                                         
                                                                                                          registry.For<IEntityFrameworkSessionFactory>().Use(() => new EntityFrameworkSessionFactory(() =>
                                                                                                                                                                                                         {
                                                                                                                                                                                                             DbContext incDbContext = new IncDbContext("Main", typeof(Bootstrapper).Assembly);
                                                                                                                                                                                                             incDbContext.Configuration.ValidateOnSaveEnabled = false;
                                                                                                                                                                                                             return incDbContext;
                                                                                                                                                                                                         }));
-                                                                                                         registry.For<IUnitOfWorkFactory>().Singleton().Use<RavenDbUnitOfWorkFactory>().Named(entityFramework);
-                                                                                                         registry.For<IRepository>().Use<RavenDbRepository>().Named(entityFramework);
+                                                                                                         registry.For<IUnitOfWorkFactory>().Singleton().Use<EntityFrameworkUnitOfWorkFactory>().Named(entityFramework);
+                                                                                                         registry.For<IRepository>().Use<EntityFrameworkRepository>().Named(entityFramework);
+
+                                                                                                         BsonClassMap.RegisterClassMap<IncEntityBase>(map => map.UnmapProperty(r => r.Id));
+                                                                                                         registry.For<IMongoDbSessionFactory>().Use(() => new MongoDbSessionFactory("mongodb://localhost:27017/benchmark"));
+                                                                                                         registry.For<IUnitOfWorkFactory>().Singleton().Use<MongoDbUnitOfWorkFactory>().Named(mongoDb);
+                                                                                                         registry.For<IUnitOfWork>().Singleton().Use<MongoDbUnitOfWork>().Named(mongoDb);
+                                                                                                         registry.For<IRepository>().Use<MongoDbRepository>().Named(mongoDb);
                                                                                                      })));
 
             var nhManagerDb = IoCFactory.Instance.TryResolve<IManagerDataBase>();

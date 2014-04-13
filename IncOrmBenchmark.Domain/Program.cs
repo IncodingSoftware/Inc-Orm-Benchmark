@@ -42,8 +42,9 @@
             foreach (var key in new[]
                                     {
                                             Bootstrapper.nhKey, 
-                                            Bootstrapper.ravenKey, 
                                             Bootstrapper.entityFramework, 
+                                            Bootstrapper.ravenKey, 
+                                            Bootstrapper.mongoDb
                                     })
             {
                 Run(message: () => new AddCustomerCommand { Name = "Any name" }, 
@@ -54,12 +55,23 @@
                     repeat: 1, 
                     key: key, 
                     label: "insert batch on shared transaction");
+
                 string id = IoCFactory.Instance.TryResolve<IDispatcher>()
                                       .Query(new GetEntitiesQuery<Customer>(), new MessageExecuteSetting
                                                                                    {
                                                                                            DataBaseInstance = key
                                                                                    })
                                       .First().Id;
+
+                Run(message: () => new UpdateCustomerCommand
+                                       {
+                                               Id = id, 
+                                               Name = "New Name", 
+                                               IsTracking = key != Bootstrapper.mongoDb
+                                       }, 
+                    repeat: 1000, 
+                    key: key, 
+                    label: "update on isolated transaction");
                 Run(message: () => new GetCustomerByIdQuery
                                        {
                                                Id = id

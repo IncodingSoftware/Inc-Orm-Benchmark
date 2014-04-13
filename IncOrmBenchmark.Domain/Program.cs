@@ -46,13 +46,13 @@
                                             Bootstrapper.entityFramework, 
                                     })
             {
-                Run(message: () => new AddCustomerCommand { Name = "Any name" },
-                    repeat: 1000,
-                    key: key,
+                Run(message: () => new AddCustomerCommand { Name = "Any name" }, 
+                    repeat: 1000, 
+                    key: key, 
                     label: "insert on isolated transaction");
-                Run(message: () => new BatchCustomerCommand { Name = "Any name", Count = item },
-                    repeat: 1,
-                    key: key,
+                Run(message: () => new BatchCustomerCommand { Name = "Any name", Count = item }, 
+                    repeat: 1, 
+                    key: key, 
                     label: "insert batch on shared transaction");
                 string id = IoCFactory.Instance.TryResolve<IDispatcher>()
                                       .Query(new GetEntitiesQuery<Customer>(), new MessageExecuteSetting
@@ -63,41 +63,31 @@
                 Run(message: () => new GetCustomerByIdQuery
                                        {
                                                Id = id
-                                       },
-                    repeat: 1000,
-                    key: key,
+                                       }, 
+                    repeat: 1000, 
+                    key: key, 
                     label: "get by id on isolated transaction");
                 Run(message: () => new GetCustomerQuery
                                        {
-                                               Name = "Any name",
+                                               Name = "Any name", 
                                                FetchSize = item
-                                       },
-                    repeat: 1,
-                    key: key,
+                                       }, 
+                    repeat: 1, 
+                    key: key, 
                     label: "read");
-                Run(message: () => new DeleteAllCustomerCommand(),
-                    repeat: 1,
-                    key: key,
+                Run(message: () => new DeleteAllCustomerCommand(), 
+                    repeat: 1, 
+                    key: key, 
                     label: "delete all");
+                Run(message: () => new EmptyCommand(), 
+                    repeat: 1000, 
+                    key: key, 
+                    label: "empty");
                 Console.WriteLine();
             }
 
             Console.Read();
             Console.WriteLine("Benchmark finished");
-        }
-    }
-
-    public class GetCustomerByIdQuery : QueryBase<Customer>
-    {
-        #region Properties
-
-        public string Id { get; set; }
-
-        #endregion
-
-        protected override Customer ExecuteResult()
-        {
-            return Repository.GetById<Customer>(Id);
         }
     }
 }

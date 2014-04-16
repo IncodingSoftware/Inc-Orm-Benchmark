@@ -69,6 +69,7 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Operations\AddOrderCommand.cs" />
     <Compile Include="Operations\EmptyCommand.cs" />
     <Compile Include="Operations\GetCustomerByIdQuery.cs" />
     <Compile Include="Operations\CustomerByNameWhereSpec.cs" />
@@ -76,8 +77,9 @@
     <Compile Include="Operations\AddCustomerCommand.cs" />
     <Compile Include="Operations\BatchCustomerCommand.cs" />
     <Compile Include="Operations\Customer.cs" />
-    <Compile Include="Operations\DeleteAllCustomerCommand.cs" />
+    <Compile Include="Operations\DeleteAllCommand.cs" />
     <Compile Include="Infrastructure\Bootstrapper.cs" />
+    <Compile Include="Operations\Order.cs" />
     <Compile Include="Operations\UpdateCustomerCommand.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

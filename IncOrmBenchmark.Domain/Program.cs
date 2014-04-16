@@ -55,14 +55,12 @@
                     repeat: 1, 
                     key: key, 
                     label: "insert batch on shared transaction");
-
                 string id = IoCFactory.Instance.TryResolve<IDispatcher>()
                                       .Query(new GetEntitiesQuery<Customer>(), new MessageExecuteSetting
                                                                                    {
                                                                                            DataBaseInstance = key
                                                                                    })
                                       .First().Id;
-
                 Run(message: () => new UpdateCustomerCommand
                                        {
                                                Id = id, 
@@ -72,6 +70,13 @@
                     repeat: 1000, 
                     key: key, 
                     label: "update on isolated transaction");
+                Run(message: () => new AddOrderCommand
+                                       {
+                                               CustomerId = id
+                                       }, 
+                    repeat: 1000, 
+                    key: key, 
+                    label: "insert with reference on isolated transaction");
                 Run(message: () => new GetCustomerByIdQuery
                                        {
                                                Id = id
@@ -87,7 +92,7 @@
                     repeat: 1, 
                     key: key, 
                     label: "read");
-                Run(message: () => new DeleteAllCustomerCommand(), 
+                Run(message: () => new DeleteAllCommand(), 
                     repeat: 1, 
                     key: key, 
                     label: "delete all");

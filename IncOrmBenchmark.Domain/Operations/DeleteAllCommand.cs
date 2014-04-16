@@ -1,8 +1,12 @@
 ﻿namespace IncOrmBenchmark.Domain
 {
+    #region << Using >>
+
     using Incoding.CQRS;
 
-    public class DeleteAllCustomerCommand : CommandBase
+    #endregion
+
+    public class DeleteAllCommand : CommandBase
     {
         #region Properties
 
@@ -12,7 +16,8 @@
 
         public override void Execute()
         {
-            this.Repository.DeleteAll<Customer>();
+            Repository.DeleteAll<Order>();
+            Repository.DeleteAll<Customer>();
         }
     }
 }

@@ -1,16 +1,22 @@
 ﻿namespace IncOrmBenchmark.Domain
 {
+    #region << Using >>
+
     using System;
     using System.Data.Entity.ModelConfiguration;
     using Incoding.Data;
+    using Raven.Imports.Newtonsoft.Json;
 
+    #endregion
+
+    [JsonObject(IsReference = true, ItemReferenceLoopHandling = ReferenceLoopHandling.Ignore)]
     public class Order : IncEntityBase
     {
         #region Constructors
 
         public Order()
         {
-            this.Id = Guid.NewGuid().ToString();
+            Id = Guid.NewGuid().ToString();
         }
 
         #endregion

@@ -41,9 +41,9 @@
 
             foreach (var key in new[]
                                     {
-                                            Bootstrapper.nhKey, 
-                                            Bootstrapper.entityFramework, 
-                                            Bootstrapper.ravenKey, 
+                                            Bootstrapper.ravenKey,
+                                            Bootstrapper.nhKey,
+                                            Bootstrapper.entityFramework,
                                             Bootstrapper.mongoDb
                                     })
             {

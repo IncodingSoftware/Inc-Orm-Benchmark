@@ -5,9 +5,11 @@
     using System;
     using System.Data.Entity.ModelConfiguration;
     using Incoding.Data;
+    using Raven.Imports.Newtonsoft.Json;
 
     #endregion
 
+   
     public class Customer : IncEntityBase
     {
         #region Constructors
